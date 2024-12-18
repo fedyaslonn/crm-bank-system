@@ -1,0 +1,97 @@
+{% load static %}
+
+
+{% block extra_css %}
+    <title>Регистрация</title>
+    <style>
+        body {
+            background-color: #000; /* Чёрный фон */
+            color: #fff; /* Белый текст */
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #333;
+            color: #fff;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #ffcc00;
+        }
+
+        .btn-submit {
+            background-color: #ffcc00;
+            color: #000;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            background-color: #e6b800;
+        }
+
+        .error-message {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="form-container">
+        <h1>Регистрация</h1>
+        <form method="post">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="error-message">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn-submit">Зарегистрироваться</button>
+        </form>
+        {% if error %}
+            <div class="error-message">{{ error }}</div>
+        {% endif %}
+    </div>
+{% endblock %}

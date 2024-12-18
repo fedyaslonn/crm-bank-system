@@ -1,0 +1,227 @@
+/* Общий фон и шрифты */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #1c1c1c;
+    color: #f4f4f4;
+}
+
+header {
+    background-color: #2a2a2a;
+    padding: 15px 10px;
+}
+
+.nav-bar {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.nav-bar a {
+    text-decoration: none;
+    color: #f4f4f4;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.nav-bar a:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+main {
+    margin: 20px;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #ffcc00;
+    font-size: 40px;
+}
+
+.popular-cryptos {
+    margin-bottom: 40px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #2a2a2a;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th, table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #333;
+}
+
+table th {
+    background-color: #444;
+    color: #f4f4f4;
+    text-transform: uppercase;
+}
+
+table td {
+    font-size: 14px;
+    color: #f4f4f4;
+}
+
+.positive {
+    color: #4caf50; /* Зеленый для положительных изменений */
+}
+
+.negative {
+    color: #f44336; /* Красный для отрицательных изменений */
+}
+
+/* Стили формы */
+.purchase-form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #2a2a2a;
+    border-radius: 10px;
+}
+
+.purchase-form label {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.purchase-form select,
+.purchase-form input[type="number"],
+.purchase-form input[type="text"] {
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #333;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #333;
+    color: #f4f4f4;
+}
+
+.purchase-form select:focus,
+.purchase-form input[type="number"]:focus,
+.purchase-form input[type="text"]:focus {
+    border-color: #ffcc00;
+    outline: none;
+    transition: border-color 0.3s ease;
+}
+
+.purchase-form button {
+    background-color: #ffcc00;
+    color: #1c1c1c;
+    padding: 12px 22px; /* Увеличенный размер кнопки на 2 единицы */
+    font-size: 16px; /* Увеличенный размер шрифта на 2 единицы */
+    font-weight: bold;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.purchase-form button:hover {
+    background-color: #ffd633;
+}
+
+/* Футер */
+footer {
+    text-align: center;
+    margin-top: 40px;
+    padding: 10px;
+    background-color: #2a2a2a;
+    color: #f4f4f4;
+    font-size: 14px;
+}
+
+/* Основной стиль для навбара */
+.nav-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2a2a2a;
+    padding: 10px 20px;
+}
+
+/* Линки навигации */
+.nav-links a {
+    text-decoration: none;
+    color: #f4f4f4;
+    margin: 0 10px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.nav-links a:hover {
+    color: #ffcc00;
+    text-decoration: underline;
+}
+
+/* Стили для правой части с иконками */
+.nav-icons {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.icon-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.icon-img {
+    width: 40px; /* Увеличенный размер иконки на 2 единицы */
+    height: 40px; /* Увеличенный размер иконки на 2 единицы */
+    cursor: pointer;
+}
+
+/* Уведомление */
+.notification-dot {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 2px;
+    background-color: #ffcc00;
+    border-radius: 50%;
+    border: 2px solid #2a2a2a; /* Чтобы обводка соответствовала фону */
+}
+
+
+.profile-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.profile-photo img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    list-style: none;
+    padding: 0;
+    text-align: left;
+    font-size: 16px;
+}
+
+.profile-info li {
+    margin-bottom: 10px;
+}

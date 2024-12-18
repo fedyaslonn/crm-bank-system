@@ -1,0 +1,30 @@
+{% extends 'user_base.html' %}
+
+{% block title %}Вклады{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-piggy-bank"></i> Вклады</h2>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Ваши вклады</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for deposit in deposits %}
+                <tr>
+                    <td>{{ deposit.date }}</td>
+                    <td>{{ deposit.amount }}</td>
+                    <td>{{ deposit.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Аналитика криптовалют</title>
+</head>
+<body>
+    <h1>Аналитика популярности криптовалют</h1>
+    <img src="data:image/png;base64,{{ chart_image }}" alt="График популярности">
+
+    <h2>Прогноз популярности:</h2>
+    <p>Прогнозируемая популярность: {{ predicted_popularity }}</p>
+
+    <h2>Данные:</h2>
+    <table border="1">
+        <tr>
+            <th>Валюта</th>
+            <th>Транзакции</th>
+            <th>Трейды</th>
+            <th>Общая сумма</th>
+        </tr>
+        {% for row in popularity_df %}
+            <tr>
+                <td>{{ row.currency_from }}</td>
+                <td>{{ row.transaction_count }}</td>
+                <td>{{ row.trade_count }}</td>
+                <td>{{ row.total_amount }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Жалоба детали</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Детали жалобы</h1>
+        <p><strong>Пользователь:</strong> {{ report.user.username }}</p>
+        <p><strong>Описание:</strong> {{ report.description }}</p>
+        <p><strong>Статус:</strong> {{ report.status }}</p>
+        <p><strong>Дата создания:</strong> {{ report.created_at|date:"d M Y" }}</p>
+        {% if report.screenshot %}
+        <p><strong>URL скриншота:</strong> <a href="{{ report.screenshot }}" target="_blank">{{ report.screenshot }}</a></p>
+        {% endif %}
+        {% if report.document_url %}
+        <p><strong>URL документа:</strong> <a href="{{ report.document_url }}" target="_blank">{{ report.document_url }}</a></p>
+        {% endif %}
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

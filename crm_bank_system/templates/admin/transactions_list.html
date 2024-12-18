@@ -1,0 +1,83 @@
+{% extends 'base_admin.html' %}
+{% load static %}
+
+{% block title %}Админ панель{% endblock %}
+{% block header %}Админ панель{% endblock %}
+{% block content %}
+<style>
+    .full-width-button {
+        width: 100%;
+        max-width: 100%;
+    }
+    .button-container {
+        margin-top: 1rem; /* Добавляем отступ сверху */
+    }
+</style>
+<div class="container">
+    <h1>Список транзакций</h1>
+    <form method="get" class="row mb-4">
+        <!-- Поиск по отправителю -->
+        <div class="col-md-6">
+            <input
+                type="text"
+                name="search"
+                value="{{ request.GET.search }}"
+                placeholder="Поиск по отправителю..."
+                class="form-control">
+        </div>
+        <!-- Фильтр по типу транзакции -->
+        <div class="col-md-4">
+            <select name="type" class="form-control">
+                <option value="">Все типы</option>
+                {% for type_choice in type_choices %}
+                    <option value="{{ type_choice.0 }}" {% if request.GET.type == type_choice.0 %}selected{% endif %}>
+                        {{ type_choice.1 }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <!-- Кнопка "Применить" -->
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary">Применить</button>
+        </div>
+    </form>
+
+    <!-- Таблица с транзакциями -->
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Отправитель</th>
+                <th>Получатель</th>
+                <th>Сумма</th>
+                <th>Тип</th>
+                <th>Статус</th>
+                <th>Дата</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for transaction in transactions %}
+            <tr>
+                <td>{{ transaction.id }}</td>
+                <td>{{ transaction.sender.username }}</td>
+                <td>{{ transaction.recipient.username|default:"-" }}</td>
+                <td>{{ transaction.amount }}</td>
+                <td>{{ transaction.get_type_display }}</td>
+                <td>{{ transaction.get_status_display }}</td>
+                <td>{{ transaction.created_at }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" class="text-center">Нет данных для отображения</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="button-container">
+    <form action="{% url 'export_transactions_list_excel' %}" method="get">
+        <button type="submit" class="btn btn-success btn-block full-width-button">Экспорт в Excel</button>
+    </form>
+</div>
+{% endblock %}

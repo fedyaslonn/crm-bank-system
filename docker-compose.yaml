@@ -1,0 +1,58 @@
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    hostname: rabbitmq
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit disk_free_limit 2147483648
+    ports:
+      - 5672:5672
+      - 15672:15672
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+  web:
+    build: .
+    container_name: django_app
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - rabbitmq
+    environment:
+      - DJANGO_SETTINGS_MODULE=crm_bank_system.settings
+
+  celery:
+    build: .
+    container_name: celery_worker
+    command: ["celery", "-A", "crm_bank_system.celery_app", "worker", "-l", "info", "--queues=registration_notification,admin_registration_notification,salary,pass_recovery"]
+    volumes:
+      - ./crm_bank_system:/app
+    depends_on:
+      - rabbitmq
+
+  celery-beat:
+    build: .
+    container_name: celery_beat
+    command: ["celery", "-A", "crm_bank_system.celery_app", "beat", "-l", "info"]
+    volumes:
+      - ./crm_bank_system:/app/
+    depends_on:
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/fed0r/PycharmProjects/rabbitmq_data'
+  media_volume:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/fed0r/PycharmProjects/crm-bank-system/media'

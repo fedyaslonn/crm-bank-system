@@ -1,0 +1,213 @@
+.form-errors {
+    color: #d9534f;
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+.form-errors ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.form-errors li {
+    margin-bottom: 5px;
+}
+
+.hidden {
+    display: none;
+}
+
+.news-section h1 {
+    text-align: center;
+    font-size: 36px; /* Увеличиваем размер шрифта */
+    margin-bottom: 20px; /* Добавляем отступ снизу */
+    position: relative;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.news-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Центрируем контейнеры по центру */
+    width: 100%; /* Устанавливаем ширину на 100% */
+    max-width: 800px; /* Ограничиваем максимальную ширину контейнера */
+    margin: 0 auto; /* Центрируем контейнер по горизонтали */
+}
+
+.news-item {
+    border: 1px solid #ddd;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #fff; /* Устанавливаем цвет текста на белый */
+    width: 100%; /* Устанавливаем ширину на 100% */
+    box-sizing: border-box; /* Учитываем padding и border в общей ширине */
+}
+
+.news-item h2 {
+    text-align: center;
+}
+.read-more-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #ffc107; /* Желтый цвет */
+    color: #000; /* Черный текст */
+    text-decoration: none;
+    border-radius: 5px;
+    margin-top: 15px; /* Отступ сверху для размещения ниже */
+    cursor: pointer;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.read-more-btn:hover {
+    background-color: #e0a800; /* Темно-желтый при наведении */
+}
+
+.read-more-btn.expanded {
+    background-color: #28a745; /* Зеленый цвет после раскрытия */
+    color: white;
+}
+
+.hidden {
+    display: none;
+}
+
+.full-content {
+    margin-top: 10px;
+}
+
+.reaction-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.news-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.news-section {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    max-width: 100%; /* Ensure the container does not exceed the viewport width */
+    overflow-x: hidden; /* Hide horizontal overflow */
+}
+
+.news-content {
+    margin-top: 20px; /* Adjust as needed */
+    max-width: 100%; /* Ensure the content does not exceed the container width */
+    overflow-wrap: break-word; /* Break long words to prevent overflow */
+    word-wrap: break-word; /* Support for older browsers */
+    overflow: hidden; /* Hide overflow content */
+}
+
+.news-actions {
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.add-news-btn {
+    display: block;
+    width: 100%;
+    max-width: 820px; /* Ширина чуть больше контейнера новостей */
+    padding: 15px 20px;
+    background-color: #4caf50; /* Зеленый цвет */
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border-radius: 5px;
+    margin: 20px auto; /* Центрируем кнопку по горизонтали */
+    font-weight: bold;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.add-news-btn:hover {
+    background-color: #45a049; /* Темно-зеленый цвет при наведении */
+}
+
+
+.search-form .search-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    box-shadow: none;
+}
+
+.search-form .search-button:hover {
+    background-color: #0056b3;
+}
+
+.search-form .search-button:focus {
+    outline: none;
+    box-shadow: 0 0 5px #007bff;
+}
+
+@media (max-width: 768px) {
+    .search-form {
+        flex-direction: column;
+    }
+
+    .search-input {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+
+    .search-button {
+        width: 100%;
+    }
+}
+
+.comments-section {
+    margin-top: 20px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+}
+
+.comments-section .existing-comments .comment {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.comments-section .add-comment textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.comments-section .add-comment button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.comments-section .add-comment button:hover {
+    background-color: #0056b3;
+}
+

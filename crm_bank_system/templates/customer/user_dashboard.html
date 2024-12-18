@@ -1,0 +1,61 @@
+{% extends 'user_base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-home"></i> Главная</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Курсы валют</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Валюта</th>
+                            <th>Курс</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for currency in currencies %}
+                        <tr>
+                            <td>{{ currency.name }}</td>
+                            <td>{{ currency.rate }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Последние операции</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Дата</th>
+                            <th>Описание</th>
+                            <th>Сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for operation in operations %}
+                        <tr>
+                            <td>{{ operation.date }}</td>
+                            <td>{{ operation.description }}</td>
+                            <td>{{ operation.amount }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

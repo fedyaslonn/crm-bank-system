@@ -1,0 +1,127 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %} Мои крипто-карты {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .dark-container {
+            background-color: #333;
+            color: #fff;
+        }
+        .card {
+            margin-top: 20px;
+            background-color: #444; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+            border: 1px solid #555; /* Легкий бордер */
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #ffc107; /* Желтый фон для кнопки */
+            border-color: #ffc107; /* Желтый бордер для кнопки */
+            color: #000; /* Черный текст для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #e0a800; /* Темно-желтый фон для кнопки при наведении */
+            border-color: #e0a800; /* Темно-желтый бордер для кнопки при наведении */
+            color: #000; /* Черный текст для кнопки при наведении */
+        }
+        .btn-add-card {
+            margin: 20px 0;
+            background-color: #28a745; /* Зеленый фон для кнопки */
+            color: #fff;
+        }
+        .btn-add-card:hover {
+            background-color: #218838;
+        }
+        .full-width-btn {
+            width: 100%; /* Ширина кнопки на всю строку */
+            margin: 20px 0;
+        }
+        .full-width-card {
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+    </style>
+
+    <div class="container dark-container">
+        <h1 class="text-center mt-4">Мои крипто-карты</h1>
+        <div class="text-center">
+            <a href="{% url 'add_card' %}" class="btn btn-add-card btn-lg full-width-btn">Добавить карту</a>
+        </div>
+
+        <!-- Форма для выбора сортировки -->
+        <form method="get" action="" class="mt-4">
+            <div class="form-row align-items-center">
+                <div class="col-auto">
+                    <label for="sort" class="mr-2">Сортировать по дате:</label>
+                    <select name="sort" id="sort" class="form-control">
+                        <option value="asc" {% if sort == "asc" %}selected{% endif %}>Сначала старые</option>
+                        <option value="desc" {% if sort == "desc" %}selected{% endif %}>Сначала новые</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+        </form>
+
+        {% if cards.exists %}
+            <div class="row mt-4">
+                {% for card in cards %}
+                    <div class="col-12">
+                        <div class="card full-width-card">
+                            <div class="card-header text-center">
+                                Карта {{ card.get_masked_card_number }}
+                            </div>
+                            <div class="card-body">
+                                <p>Баланс: {{ card.balance }}</p>
+                                <p>Баланс в USD: {{card.balance_in_usd }}</p>
+                                <p>Дата добавления: {{ card.created_at|date:"d.m.Y" }}</p>
+                                <a href="{% url 'top_up_crypto_card' %}" class="btn btn-primary btn-block">Пополнить баланс</a>
+
+                                {% if cards.count > 1 and card != first_card %}
+                                    <form action="{% url 'delete_crypto_card' card.id %}" method="post" class="mt-2">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-danger btn-block">Удалить карту</button>
+                                    </form>
+                                {% endif %}
+
+                                {% if request.user.is_superuser %}
+                                    {% if card.is_active %}
+                                        <form action="{% url 'freeze_crypto_card' card.id %}" method="post" class="mt-2">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-warning btn-block">Заморозить карту</button>
+                                        </form>
+                                    {% else %}
+                                        <form action="{% url 'unfreeze_crypto_card' card.id %}" method="post" class="mt-2">
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-success btn-block">Разморозить карту</button>
+                                        </form>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-danger text-center mt-4">У вас нет добавленных карт.</div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

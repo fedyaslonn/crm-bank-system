@@ -1,0 +1,88 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %} Добавить карту {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .dark-container {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-container input,
+        .dark-container textarea,
+        .dark-container select {
+            background-color: #444;
+            color: #fff;
+        }
+        .dark-container .alert.alert-danger {
+            background-color: #900;
+            color: #fff;
+        }
+        .card {
+            margin-top: 50px;
+            background-color: #333; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #ffc107; /* Желтый фон для кнопки */
+            border-color: #ffc107; /* Желтый бордер для кнопки */
+            color: #000; /* Черный текст для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #e0a800; /* Темно-желтый фон для кнопки при наведении */
+            border-color: #e0a800; /* Темно-желтый бордер для кнопки при наведении */
+            color: #000; /* Черный текст для кнопки при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="container dark-container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Добавить новую карту</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {% for field in form %}
+                                <div class="form-group">
+                                    {{ field.label_tag }}
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="alert alert-danger">
+                                            {{ field.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                            <button type="submit" class="btn btn-primary btn-block">Добавить карту</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+{% endblock %}
+</body>
+</html>

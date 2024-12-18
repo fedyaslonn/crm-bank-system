@@ -1,0 +1,40 @@
+{% extends 'base_user.html' %}
+{% load static %}
+{% block title %} Перевод на крипто-карту {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <h2>Пополнение обычной карты криптовалютной</h2>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="post" action="">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Пополнить</button>
+    </form>
+
+    {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field, errors in form.errors.items %}
+                    {% for error in errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock %}

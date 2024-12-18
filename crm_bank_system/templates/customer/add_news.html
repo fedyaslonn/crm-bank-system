@@ -1,0 +1,41 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Добавить новость{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <section class="add-news-section">
+        <h1>Добавить новость</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.errors %}
+                <div class="form-errors">
+                    <ul>
+                        {% for field in form %}
+                            {% if field.errors %}
+                                <li>
+                                    <strong>{{ field.label }}:</strong>
+                                    {{ field.errors|join:", " }}
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+                        {% if form.non_field_errors %}
+                            <li><strong>Общие ошибки:</strong> {{ form.non_field_errors|join:", " }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {{ form.as_p }}
+
+            <button type="submit" class="common-btn">Добавить</button>
+        </form>
+    </section>
+{% endblock %}

@@ -1,0 +1,116 @@
+{% extends 'base_user.html' %}
+{% block title %}Поиск друзей{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<style>
+    .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    .search-bar {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+    }
+
+    .search-bar input {
+        flex-grow: 1;
+        margin-right: 10px;
+    }
+
+    .user-card {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+    }
+
+    .user-card img {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        margin-right: 15px;
+    }
+
+    .user-info {
+        flex-grow: 1;
+    }
+
+    .user-info h3 {
+        margin: 0;
+        font-size: 18px;
+        color: black;
+    }
+
+    .user-info p {
+        margin: 5px 0 0;
+        font-size: 14px;
+        color: black;
+    }
+
+    .user-actions {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-actions .btn {
+        margin-bottom: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Поиск друзей</h2>
+    <div class="menu-bar">
+        <a href="{% url 'my_friends' %}">Мои друзья</a>
+        <a href="{% url 'my_friends_requests' %}">Мои запросы на дружбу</a>
+        <a href="{% url 'incoming_friend_requests' %}">Заявки на дружбу</a>
+        <a href="{% url 'search_friends' %}">Добавить друзей</a>
+    </div>
+    <!-- Форма поиска -->
+    <form method="GET" action="{% url 'search_friends' %}" class="search-bar mb-4">
+        <input
+            type="text"
+            name="query"
+            id="search-input"
+            placeholder="Введите имя пользователя или email..."
+            class="form-control">
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
+
+    <!-- Контейнер для результатов поиска -->
+    <div id="search-results">
+        {% if users %}
+            {% for user in users %}
+            <div class="user-card">
+                <img src="{{ user.profile_photo }}" alt="{{ user.username }}">
+                <div class="user-info">
+                    <h3>{{ user.username }}</h3>
+                    <p>{{ user.email }}</p>
+                    <p>{{ user.first_name }} {{ user.last_name }}</p>
+                </div>
+                <div class="user-actions">
+                    <!-- Форма для добавления в друзья -->
+                    <form method="POST" action="{% url 'send_friend_request' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="user_to_id" value="{{ user.id }}">
+                        <button type="submit" class="btn btn-primary">Добавить в друзья</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>Пользователи не найдены.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

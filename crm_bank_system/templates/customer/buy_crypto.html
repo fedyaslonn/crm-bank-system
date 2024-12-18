@@ -1,0 +1,81 @@
+{% extends 'base_user.html' %}
+{% load static %}
+{% block title %}Купить криптовалюту{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+{% endblock %}
+{% block content %}
+<main>
+    <!-- Секция популярных криптовалют -->
+    <section class="popular-cryptos">
+        <h1>Популярные криптовалюты</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Цена (USD)</th>
+                    <th>Изменение (24ч)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for crypto in crypto_data %}
+                <tr>
+                    <td>{{ crypto.name }} ({{ crypto.symbol|upper }})</td>
+                    <td>${{ crypto.current_price|floatformat:2 }}</td>
+                    <td class="{% if crypto.price_change_percentage_24h > 0 %}positive{% else %}negative{% endif %}">
+                        {{ crypto.price_change_percentage_24h|floatformat:2 }}%
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">Нет данных о криптовалютах</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <!-- Секция формы для покупки криптовалюты -->
+    <section class="purchase-form">
+        <h2>Купить криптовалюту</h2>
+        <form method="post" action="{% url 'process_purchase' %}">
+            {% csrf_token %}
+            <label>
+                <span>Выберите криптовалюту:</span>
+                <select id="crypto-select" name="crypto">
+                    {% for crypto in crypto_data %}
+                    <option value="{{ crypto.symbol }}" data-rate="{{ crypto.current_price }}">
+                        {{ crypto.name }} ({{ crypto.symbol|upper }})
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                <span>Введите сумму (USD):</span>
+                <input type="number" id="amount" name="amount" placeholder="Введите сумму в долларах" min="15" max="100000" required>
+            </label>
+            <label>
+                <span>Получите (в выбранной криптовалюте):</span>
+                <input type="text" id="crypto-output" name="crypto_output" readonly>
+            </label>
+            <input type="hidden" id="crypto-rate" name="crypto_rate" value="">
+            <input type="hidden" id="crypto-hidden" name="crypto_hidden" value="">
+            <label>
+                <span>Выберите карту для оплаты:</span>
+                <select id="card-select" name="card_number">
+                    {% for card in user_cards %}
+                    <option value="{{ card.card_number }}">
+                        {{ card.get_masked_card_number }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <button type="submit">Произвести покупку</button>
+        </form>
+    </section>
+</main>
+
+{% block extra_scripts %}
+    <script src="{% static 'js/buy_crypto.js' %}"></script>
+{% endblock %}
+{% endblock %}

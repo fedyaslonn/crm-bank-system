@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Предложения кредитов</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Предложения кредитов</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col" class="text-center">Сумма кредита</th>
+                    <th scope="col" class="text-center">Процентная ставка</th>
+                    <th scope="col" class="text-center">Срок (месяцев)</th>
+                    <th scope="col" class="text-center">Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan_offer in loan_offers %}
+                <tr>
+                    <td class="text-center">{{ loan_offer.amount }}</td>
+                    <td class="text-center">{{ loan_offer.interest_rate }}</td>
+                    <td class="text-center">{{ loan_offer.term }}</td>
+                    <td class="text-center">
+                        <form action="{% url 'loan_request_create' loan_offer.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-primary">Отправить заявку</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">Нет доступных предложений кредитов.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

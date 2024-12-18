@@ -1,0 +1,30 @@
+{% extends 'user_base.html' %}
+
+{% block title %}Кредиты{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-hand-holding-usd"></i> Кредиты</h2>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Ваши кредиты</h5>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Дата</th>
+                    <th>Сумма</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan in loans %}
+                <tr>
+                    <td>{{ loan.date }}</td>
+                    <td>{{ loan.amount }}</td>
+                    <td>{{ loan.status }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

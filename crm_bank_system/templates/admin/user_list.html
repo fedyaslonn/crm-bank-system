@@ -1,0 +1,79 @@
+{% extends 'base_admin.html' %}
+
+{% block content %}
+<!-- Include the CSS styles within a <style> tag -->
+<style>
+    .action-buttons {
+        display: flex;
+    }
+    .action-buttons .btn-custom {
+        padding: 5px 10px !important;
+        font-size: 0.9em !important;
+        line-height: 1 !important;
+        height: 30px !important;
+        margin-right: 5px; /* Add spacing between buttons */
+    }
+</style>
+
+<div class="container mt-5">
+    <h2 class="mb-4">Список пользователей</h2>
+    <div class="search-bar mb-4">
+        <input type="text" id="search-input" placeholder="Поиск по username..." class="form-control">
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Имя пользователя</th>
+                <th scope="col">Email</th>
+                <th scope="col">Роль</th>
+                <th scope="col">Дата регистрации</th>
+                <th scope="col">Зарплата</th>
+                <th scope="col">Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.get_role_display }}</td>
+                <td>{{ user.date_joined }}</td>
+                <td>{{ user.salary }}</td>
+                <td class="action-buttons">
+                    <a href="{% url 'user_edit' user.id %}" class="btn btn-primary btn-sm btn-custom">Изменить</a>
+                        {% csrf_token %}
+                    </form>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No users found.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('#search-input').on('input', function () {
+            const query = $(this).val();
+            $.ajax({
+                url: "{% url 'users_list' %}",
+                type: "GET",
+                data: { search: query },
+                success: function (data) {
+                    $('#user-table').html(data);
+                },
+                error: function () {
+                    alert("An error occurred while fetching the users.");
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

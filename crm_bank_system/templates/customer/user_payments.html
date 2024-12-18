@@ -1,0 +1,23 @@
+{% extends 'user_base.html' %}
+
+{% block title %}Платежи{% endblock %}
+
+{% block content %}
+<h2 class="mb-4"><i class="fas fa-money-bill-wave"></i> Платежи</h2>
+<div class="card">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="amount" class="form-label">Сумма</label>
+                <input type="number" class="form-control" id="amount" name="amount" required>
+            </div>
+            <div class="mb-3">
+                <label for="recipient" class="form-label">Получатель</label>
+                <input type="text" class="form-control" id="recipient" name="recipient" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Оплатить</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

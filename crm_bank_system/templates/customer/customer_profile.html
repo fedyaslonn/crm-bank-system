@@ -1,0 +1,195 @@
+{% extends "base_user.html" %}
+
+{% block extra_css %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<style>
+    /* Общий фон и шрифты */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1c1c1c;
+        color: #f4f4f4;
+    }
+
+    /* Стили для контейнера профиля */
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: center;
+        background-color: black; /* Фон контейнера */
+        color: white; /* Цвет текста */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Стили для фото профиля */
+    .profile-photo img {
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-bottom: 20px;
+    }
+
+    /* Стили для информации о пользователе */
+    .profile-info {
+        list-style: none;
+        padding: 0;
+        text-align: left;
+        font-size: 16px;
+    }
+
+    .profile-info li {
+        margin-bottom: 10px;
+    }
+
+    /* Стили для кнопок */
+    .common-btn {
+        display: block; /* Делаем кнопку блочным элементом */
+        width: 100%; /* Растягиваем на всю ширину */
+        padding: 15px; /* Внутренние отступы */
+        font-size: 18px; /* Размер шрифта */
+        font-weight: bold; /* Жирный шрифт */
+        text-align: center; /* Выравнивание текста по центру */
+        text-decoration: none; /* Убираем подчеркивание */
+        border: none; /* Убираем границу */
+        border-radius: 5px; /* Скругленные углы */
+        cursor: pointer; /* Курсор в виде руки */
+        transition: background-color 0.3s ease; /* Плавный переход */
+        margin-top: 20px; /* Отступ сверху */
+    }
+
+    /* Стили для кнопки "Применить промокод" */
+    .apply-promo-btn {
+        background-color: #ffcc00; /* Желтый цвет */
+        color: #1c1c1c; /* Темный текст */
+    }
+
+    .apply-promo-btn:hover {
+        background-color: #ffd633; /* Светло-желтый при наведении */
+    }
+
+    /* Стили для кнопки "Редактировать профиль" */
+    .edit-profile-btn {
+        background-color: #007bff; /* Синий цвет */
+        color: white; /* Белый текст */
+    }
+
+    .edit-profile-btn:hover {
+        background-color: #0056b3; /* Темно-синий при наведении */
+    }
+
+    /* Стили для кнопки "Выход" */
+    .logout-btn {
+        background-color: #ffc107; /* Желтый цвет */
+        color: white; /* Белый текст */
+    }
+
+    .logout-btn:hover {
+        background-color: #e0a800; /* Темно-желтый при наведении */
+    }
+
+    /* Стили для формы применения промокода */
+    form {
+        margin-top: 20px; /* Отступ сверху */
+    }
+
+    form input[type="text"] {
+        width: 100%; /* Растягиваем на всю ширину */
+        padding: 10px; /* Внутренние отступы */
+        margin-bottom: 10px; /* Отступ снизу */
+        border: 1px solid #333; /* Граница */
+        border-radius: 5px; /* Скругленные углы */
+        font-size: 16px; /* Размер шрифта */
+        background-color: #333; /* Фон */
+        color: #f4f4f4; /* Цвет текста */
+    }
+
+    form button {
+        width: 100%; /* Растягиваем на всю ширину */
+        padding: 10px; /* Внутренние отступы */
+        font-size: 16px; /* Размер шрифта */
+        font-weight: bold; /* Жирный шрифт */
+        text-align: center; /* Выравнивание текста по центру */
+        border: none; /* Убираем границу */
+        border-radius: 5px; /* Скругленные углы */
+        cursor: pointer; /* Курсор в виде руки */
+        transition: background-color 0.3s ease; /* Плавный переход */
+        background-color: #ffcc00; /* Желтый цвет */
+        color: #1c1c1c; /* Темный текст */
+    }
+
+    form button:hover {
+        background-color: #ffd633; /* Светло-желтый при наведении */
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>Профиль пользователя</h1>
+    <div class="profile-photo">
+        {% if user_profile.profile_photo %}
+            <img src="{{ user_profile.profile_photo }}" alt="{{ user_profile.username }}'s photo" />
+        {% else %}
+            <img src="{% static 'default-profile.png' %}" alt="Default profile photo" />
+        {% endif %}
+    </div>
+    <ul class="profile-info">
+        <li><strong>Имя:</strong> {{ user_profile.first_name }}</li>
+        <li><strong>Фамилия:</strong> {{ user_profile.last_name }}</li>
+        <li><strong>Email:</strong> {{ user_profile.email }}</li>
+        <li><strong>Имя пользователя:</strong> {{ user_profile.username }}</li>
+        <li><strong>Роль:</strong> {{ user_profile.get_role_display }}</li>
+        <li><strong>Дата регистрации:</strong> {{ user_profile.date_joined|date:"d M Y" }}</li>
+        <li><strong>Зарплата:</strong> {{ user_profile.salary }} руб.</li>
+    </ul>
+
+    <p>Ваш промокод: {{ user_profile.promo|default:"Промокод еще не создан" }}</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="common-btn">Создать промокод</button>
+    </form>
+
+    <form method="post" action="{% url 'apply_promo_code' %}">
+        {% csrf_token %}
+        <input type="text" name="promo_code" placeholder="Введите чужой промокод" required>
+        <button type="submit" class="common-btn apply-promo-btn">Применить промокод</button>
+    </form>
+
+    <!-- Кнопка "Редактировать профиль" -->
+    <a href="{% url 'edit_profile' user_profile.id %}" class="common-btn edit-profile-btn">Редактировать профиль</a>
+
+{% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li class="{{ message.tags }}">{{ message }}</li>
+        {% endfor %}
+    </ul>
+    <!-- Удаляем сообщения после их отображения -->
+    {% for message in messages %}
+        {% if message.tags %}
+            <script>
+                // Удаляем сообщение из сессии после отображения
+                document.addEventListener('DOMContentLoaded', function() {
+                    setTimeout(function() {
+                        document.querySelector('.messages').remove();
+                    }, 5000); // Удаляем через 5 секунд
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+{% endif %}
+
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="common-btn logout-btn">Выход</button>
+    </form>
+</div>
+{% endblock %}

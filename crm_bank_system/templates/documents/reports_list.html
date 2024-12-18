@@ -1,0 +1,111 @@
+{% extends "base_admin.html" %}
+{% load static %}
+{% block title %} Необработанные жалобы {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .dark-container {
+            background-color: #333;
+            color: #fff;
+        }
+        .card {
+            margin-top: 20px;
+            background-color: #444; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+            border: 1px solid #555; /* Легкий бордер */
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #ffc107; /* Желтый фон для кнопки */
+            border-color: #ffc107; /* Желтый бордер для кнопки */
+            color: #000; /* Черный текст для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #e0a800; /* Темно-желтый фон для кнопки при наведении */
+            border-color: #e0a800; /* Темно-желтый бордер для кнопки при наведении */
+            color: #000; /* Черный текст для кнопки при наведении */
+        }
+        .btn-danger {
+            background-color: #dc3545; /* Красный фон для кнопки */
+            border-color: #dc3545; /* Красный бордер для кнопки */
+            color: #fff; /* Белый текст для кнопки */
+        }
+        .btn-danger:hover {
+            background-color: #c82333; /* Темно-красный фон для кнопки при наведении */
+            border-color: #bd2130; /* Темно-красный бордер для кнопки при наведении */
+            color: #fff; /* Белый текст для кнопки при наведении */
+        }
+        .btn-secondary {
+            background-color: #6c757d; /* Серый фон для кнопки */
+            border-color: #6c757d; /* Серый бордер для кнопки */
+            color: #fff; /* Белый текст для кнопки */
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Темно-серый фон для кнопки при наведении */
+            border-color: #545b62; /* Темно-серый бордер для кнопки при наведении */
+            color: #fff; /* Белый текст для кнопки при наведении */
+        }
+        .full-width-btn {
+            width: 100%; /* Ширина кнопки на всю строку */
+            margin: 10px 0;
+        }
+        .full-width-card {
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+    </style>
+
+    <div class="container dark-container">
+        <h1 class="text-center mt-4">Необработанные жалобы</h1>
+
+        <!-- Кнопка для экспорта всех pending жалоб в JSON -->
+        <div class="text-center mb-4">
+            <a href="{% url 'export_all_pending_reports_json' %}" class="btn btn-secondary btn-lg full-width-btn">Экспорт всех pending жалоб в JSON</a>
+        </div>
+
+        {% if reports.exists %}
+            <div class="row mt-4">
+                {% for report in reports %}
+                    <div class="col-12">
+                        <div class="card full-width-card">
+                            <div class="card-header text-center">
+                                Жалоба от {{ report.created_at|date:"d.m.Y H:i" }}
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Описание:</strong> {{ report.description }}</p>
+                                <p><strong>Статус:</strong> {{ report.get_status_display }}</p>
+                                {% if report.screenshot %}
+                                    <p><strong>Скриншот:</strong> <a href="{{ report.screenshot }}" target="_blank">Просмотреть</a></p>
+                                {% endif %}
+
+                                <a href="{% url 'respond_to_report' report.id %}" class="btn btn-primary btn-block full-width-btn">Ответить на жалобу</a>
+
+                                <a href="{% url 'reject_report' report.id %}" class="btn btn-danger btn-block full-width-btn">Отказать в жалобе</a>
+
+                                <a href="{% url 'export_report_json' report.id %}" class="btn btn-secondary btn-block full-width-btn">Экспорт в JSON</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-info text-center mt-4">Нет pending жалоб.</div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

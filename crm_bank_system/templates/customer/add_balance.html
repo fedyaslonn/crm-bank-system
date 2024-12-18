@@ -1,0 +1,90 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %} Пополнить баланс {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .dark-container {
+            background-color: #333;
+            color: #fff;
+        }
+        .dark-container input,
+        .dark-container textarea,
+        .dark-container select {
+            background-color: #444;
+            color: #fff;
+        }
+        .dark-container .alert.alert-danger {
+            background-color: #900;
+            color: #fff;
+        }
+        .card {
+            margin-top: 50px;
+            background-color: #333; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #ffc107; /* Желтый фон для кнопки */
+            border-color: #ffc107; /* Желтый бордер для кнопки */
+            color: #000; /* Черный текст для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #e0a800; /* Темно-желтый фон для кнопки при наведении */
+            border-color: #e0a800; /* Темно-желтый бордер для кнопки при наведении */
+            color: #000; /* Черный текст для кнопки при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="container dark-container">
+        {% if error_message %}
+                <div class="alert alert-danger text-center">{{ error_message }}
+                </div>
+        {% else %}
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h1 class="text-center">Пополнить баланс карты {{ card.get_masked_card_number }}</h1>
+                        </div>
+                        <div class="card-body">
+                            <form method="post">
+                                {% csrf_token %}
+                                <div class="form-group">
+                                    {{ form.amount.label_tag }}
+                                    {{ form.amount }}
+                                    {% if form.amount.errors %}
+                                        <div class="alert alert-danger">
+                                            {{ form.amount.errors }}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-block">Пополнить баланс</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    {%endif%}
+{% endblock %}
+</body>
+</html>

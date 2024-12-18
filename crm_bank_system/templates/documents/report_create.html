@@ -1,0 +1,55 @@
+{% extends 'base_user.html' %}
+{% load static %}
+
+{% block title %}Создать жалобу{% endblock %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Создать жалобу</h1>
+        <form method="post" class="needs-validation" novalidate>
+            {% csrf_token %}
+            <div class="form-group">
+                {{ form.description.label_tag }}
+                {{ form.description }}
+                <div class="invalid-feedback">
+                    Пожалуйста, введите описание проблемы.
+                </div>
+            </div>
+            <div class="form-group">
+                {{ form.screenshot.label_tag }}
+                {{ form.screenshot }}
+                <div class="invalid-feedback">
+                    Пожалуйста, введите URL скриншота.
+                </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Отправить жалобу</button>
+        </form>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+(function() {
+    'use strict';
+    window.addEventListener('load', function() {
+        var forms = document.getElementsByClassName('needs-validation');
+        var validation = Array.prototype.filter.call(forms, function(form) {
+            form.addEventListener('submit', function(event) {
+                if (form.checkValidity() === false) {
+                    event.preventDefault();
+                    event.stopPropagation();
+                }
+                form.classList.add('was-validated');
+            }, false);
+        });
+    }, false);
+})();
+</script>
+{% endblock %}

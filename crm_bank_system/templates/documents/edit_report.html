@@ -1,0 +1,20 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %} Изменить описание жалобы {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container dark-container">
+        <h1 class="text-center mt-4">Изменить описание жалобы</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">Сохранить изменения</button>
+        </form>
+        <a href="{% url 'documents:my_reports' %}" class="btn btn-secondary btn-block mt-2">Назад к жалобам</a>
+    </div>
+{% endblock %}

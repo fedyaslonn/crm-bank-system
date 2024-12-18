@@ -1,0 +1,196 @@
+{% extends "base_user.html" %}
+
+{% load static %}
+{% block title %} Список трейдов {% endblock %}
+{% block content %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        .search-container {
+            margin-bottom: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-input, .search-button {
+            box-sizing: border-box;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            outline: none;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-input {
+            flex-grow: 1;
+            margin-right: 10px;
+        }
+
+        .search-button {
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+
+        .search-button:hover {
+            background-color: #0056b3;
+        }
+
+        .create-trade-button {
+            width: 100%; /* Кнопка на всю ширину */
+            margin-bottom: 20px;
+            padding: 15px 0; /* Увеличенный отступ для кнопки */
+            font-size: 18px; /* Увеличенный размер текста */
+            border: none;
+            background-color: #28a745;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Выравнивание текста по центру */
+        }
+
+        .create-trade-button:hover {
+            background-color: #218838;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            color: black;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        .pagination .current {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .badge {
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .badge-primary {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .badge-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+    </style>
+{% endblock %}
+
+<h1>Трейды</h1>
+
+<div class="search-container">
+    <form method="get" action="" class="search-form">
+        <input type="text" name="search" class="search-input" placeholder="Поиск по трейдам" value="{{ request.GET.search }}">
+        <button type="submit" class="search-button">Поиск</button>
+    </form>
+</div>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Автор</th>
+            <th>Сумма</th>
+            <th>Валюта</th>
+            <th>Сумма к обмену</th>
+            <th>Получаемая валюта</th>
+            <th>Дата</th>
+            <th>Действия</th>
+            <th>Статус</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for trade in trades %}
+        <tr>
+            <td>{{ trade.author.username }}</td>
+            <td>{{ trade.amount_from }}</td>
+            <td>{{ trade.currency_from }}</td>
+            <td>{{ trade.amount_to }}</td>
+            <td>{{ trade.currency_to }}</td>
+            <td>{{ trade.created_at }}</td>
+            <td>
+                {% if user.is_authenticated %}
+                    {% if user != trade.author and trade.other_user is None %}
+                        <a href="{% url 'conduct_trade' trade.id %}" class="btn btn-warning">Провести трейд</a>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td>
+                {% if trade.status == 'COMPLETED' %}
+                    <span class="badge badge-success">Завершен</span>
+                {% elif trade.status == 'ACTIVE' %}
+                    <span class="badge badge-primary">Активен</span>
+                {% else %}
+                    <span class="badge badge-secondary">Неактивен</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if trades.has_previous %}
+            <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">&laquo; первая</a>
+            <a href="?page={{ trades.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">предыдущая</a>
+        {% endif %}
+
+        <span class="current">
+            Страница {{ trades.number }} из {{ trades.paginator.num_pages }}.
+        </span>
+
+        {% if trades.has_next %}
+            <a href="?page={{ trades.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">следующая</a>
+            <a href="?page={{ trades.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}">последняя &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
+{% endblock %}

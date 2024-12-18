@@ -1,0 +1,141 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}{{ news.title }}{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <style>
+        .news-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<section class="news-section">
+    <h1>{{ news.title }}</h1>
+    <p><strong>Автор:</strong> {{ news.authors.username }}</p>
+    <p><strong>Дата публикации:</strong> {{ news.created_at|date:"d M Y H:i" }}</p>
+
+    <!-- Отображение изображения новости -->
+    {% if news.news_image %}
+        <img src="{{ news.news_image }}" alt="{{ news.title }}" class="news-image">
+    {% else %}
+    {% endif %}
+
+    <div class="news-content">
+        <p>{{ news.content }}</p>
+    </div>
+
+    <div class="news-actions">
+        <span id="likes-count-{{ news.id }}">👍 Лайки: {{ news.likes_count }}</span>
+        <span id="dislikes-count-{{ news.id }}">👎 Дизлайки: {{ news.dislikes_count }}</span>
+
+        <div class="reaction-buttons">
+            <button
+                class="reaction-btn like-btn {% if is_liked %}active{% endif %}"
+                data-news-id="{{ news.id }}"
+                data-action="like">
+                👍 Лайк
+            </button>
+            <button
+                class="reaction-btn dislike-btn {% if is_disliked %}active{% endif %}"
+                data-news-id="{{ news.id }}"
+                data-action="dislike">
+                👎 Дизлайк
+            </button>
+        </div>
+    </div>
+</section>
+
+<section class="comments-section">
+    <h2>Комментарии</h2>
+
+    <div class="">
+        {% for comment in news.comments.all %}
+        <div class="comment">
+            <p><strong>{{ comment.user.username }}</strong>:</p>
+            <p>{{ comment.content }}</p>
+            <p class="timestamp">{{ comment.created_at|date:"d M Y H:i" }}</p>
+        </div>
+        {% empty %}
+        <p>Пока нет комментариев. Будьте первым!</p>
+        {% endfor %}
+    </div>
+
+    <div class="add-comment">
+        <h3>Добавить комментарий</h3>
+        <form method="post" action="{% url 'add_comment' news.id %}">
+            {% csrf_token %}
+            <textarea name="content" rows="4" required></textarea>
+            <button type="submit">Отправить</button>
+        </form>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const csrftoken = '{{ csrf_token }}';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const reactionButtons = document.querySelectorAll('.reaction-btn');
+
+        reactionButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const newsId = button.getAttribute('data-news-id');
+                const action = button.getAttribute('data-action');
+
+                // Disable buttons during request
+                button.disabled = true;
+
+                fetch(`/news/${newsId}/${action}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Update counts
+                    document.getElementById(`likes-count-${newsId}`).textContent = `👍 Лайки: ${data.likes_count}`;
+                    document.getElementById(`dislikes-count-${newsId}`).textContent = `👎 Дизлайки: ${data.dislikes_count}`;
+
+                    // Update button states
+                    const likeButton = document.querySelector(`#news-${news.id} .like-btn`);
+                    const dislikeButton = document.querySelector(`#news-${news.id} .dislike-btn`);
+
+                    if (data.is_liked) {
+                        likeButton.classList.add('active');
+                        dislikeButton.classList.remove('active');
+                    } else {
+                        likeButton.classList.remove('active');
+                    }
+
+                    if (data.is_disliked) {
+                        dislikeButton.classList.add('active');
+                        likeButton.classList.remove('active');
+                    } else {
+                        dislikeButton.classList.remove('active');
+                    }
+
+                    // Re-enable buttons
+                    button.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Ошибка при отправке реакции:', error);
+                    // Optionally show an error message
+                    button.disabled = false;
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

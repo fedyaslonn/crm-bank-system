@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Переводы</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .card {
+            margin-top: 50px;
+            background-color: #333; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #007bff; /* Синий фон для кнопки */
+            border-color: #007bff; /* Синий бордер для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #0056b3; /* Темно-синий фон для кнопки при наведении */
+            border-color: #0056b3; /* Темно-синий бордер для кнопки при наведении */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h1 class="text-center">Переводы</h1>
+                    </div>
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                {{ form.card_number.label_tag }}
+                                {{ form.card_number }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.amount.label_tag }}
+                                {{ form.amount }}
+                            </div>
+                            <div class="form-group">
+                                {{ form.comment.label_tag }}
+                                {{ form.comment }}
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Отправить</button>
+                        </form>
+                        {% if form.errors %}
+                            <div class="alert alert-danger mt-3">
+                                <ul>
+                                    {% for field, errors in form.errors.items %}
+                                        {% for error in errors %}
+                                            <li>{{ field|capfirst }}: {{ error }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

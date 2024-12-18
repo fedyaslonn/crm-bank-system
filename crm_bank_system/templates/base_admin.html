@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Админ панель{% endblock %}</title>
+    <!-- CSS -->
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+        }
+
+        .btn {
+            background-color: yellow;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            text-transform: uppercase;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #ffc107;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table, th, td {
+            border: 1px solid white;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: yellow;
+            color: black;
+        }
+    </style>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="header d-flex justify-content-between align-items-center">
+        <h1>{% block header %}Админ панель{% endblock %}</h1>
+        <div class="d-flex">
+            <a href="{% url 'buy_crypto' %}" class="btn btn-warning me-2">Выйти с админ панели</a>
+            <a href="{% url 'logout' %}" class="btn btn-danger">Выйти с аккаунта</a>
+        </div>
+    </div>
+    {% block content %}{% endblock %}
+</div>
+    <script>
+        // AJAX setup for CSRF token
+        $.ajaxSetup({
+            beforeSend: function(xhr, settings) {
+                function getCookie(name) {
+                    let cookieValue = null;
+                    if (document.cookie && document.cookie !== '') {
+                        const cookies = document.cookie.split(';');
+                        for (let i = 0; i < cookies.length; i++) {
+                            const cookie = jQuery.trim(cookies[i]);
+                            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                if (!/^http:.*/.test(settings.url) && !/^https:.*/.test(settings.url)) {
+                    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                }
+            }
+        });
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,33 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Список пользователей{% endblock %}
+
+{% block header %}Список пользователей{% endblock %}
+
+{% block content %}
+<style>
+    .full-width-button {
+        width: 100%;
+        max-width: 100%;
+    }
+    .button-container {
+        margin-top: 1rem; /* Добавляем отступ сверху */
+    }
+</style>
+<div class="search-bar">
+    <form method="GET" action="{% url 'users_list' %}">
+        <input type="text" name="search" value="{{ search_query }}" placeholder="Search by username...">
+        <button type="submit" class="btn btn-primary">Поиск</button>
+    </form>
+</div>
+
+<div id="user-table">
+    {% include "admin/users_table.html" %}
+</div>
+
+<div class="button-container">
+    <form action="{% url 'export_users_excel' %}" method="get">
+        <button type="submit" class="btn btn-success btn-block full-width-button">Экспорт в Excel</button>
+    </form>
+</div>
+{% endblock %}

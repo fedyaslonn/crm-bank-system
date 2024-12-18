@@ -1,0 +1,150 @@
+{% extends "base_user.html" %}
+{% block extra_css %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+<style>
+    /* Общий фон и шрифты */
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #1c1c1c;
+        color: #f4f4f4;
+    }
+
+    /* Стили для контейнера профиля */
+    .profile-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        text-align: left; /* Выравниваем текст по левому краю */
+        background-color: black; /* Фон контейнера */
+        color: white; /* Цвет текста */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Стили для формы */
+    form {
+        margin-top: 20px;
+    }
+
+    /* Стили для пары "метка + поле ввода" */
+    .form-group {
+        display: flex;
+        align-items: center; /* Выравниваем элементы по вертикали */
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        width: auto; /* Ширина метки */
+        text-align: left; /* Выравнивание текста метки по левому краю */
+        margin-right: 10px; /* Отступ между меткой и полем ввода */
+        font-size: 16px;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="email"],
+    .form-group input[type="password"] {
+        width: 100%; /* Ширина поля ввода */
+        padding: 10px;
+        border: 1px solid #333;
+        border-radius: 5px;
+        font-size: 16px;
+        background-color: #333;
+        color: #f4f4f4;
+    }
+
+    /* Стили для кнопок */
+    .btn {
+        display: inline-block;
+        padding: 12px 22px;
+        font-size: 16px;
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-top: 10px;
+    }
+
+    /* Желтая кнопка */
+    .btn-yellow {
+        background-color: #ffcc00;
+        color: #1c1c1c;
+    }
+
+    .btn-yellow:hover {
+        background-color: #ffd633;
+    }
+
+    .btn-yellow:focus {
+        outline: none;
+    }
+
+    /* Кнопка "Сохранить изменения" */
+    .btn-save {
+        background-color: #ffcc00;
+        color: #1c1c1c;
+        width: 100%;
+    }
+
+    .btn-save:hover {
+        background-color: #ffd633;
+    }
+
+    .btn-save:focus {
+        outline: none;
+    }
+
+    /* Кнопка "Назад к профилю" */
+    .btn-back {
+        background-color: #ffcc00;
+        color: #1c1c1c;
+        width: 100%;
+    }
+
+    .btn-back:hover {
+        background-color: #ffd633;
+    }
+
+    .btn-back:focus {
+        outline: none;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="profile-container">
+    <h1>Редактирование профиля</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">Username:</label>
+            {{ form.username }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.email.id_for_label }}">Email:</label>
+            {{ form.email }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.first_name.id_for_label }}">Имя:</label>
+            {{ form.first_name }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.last_name.id_for_label }}">Фамилия:</label>
+            {{ form.last_name }}
+        </div>
+        <div class="form-group">
+            <label for="{{ form.profile_photo.id_for_label }}">URL аватарки:</label>
+            {{ form.profile_photo }}
+        </div>
+        <button type="submit" class="btn btn-save">Сохранить изменения</button>
+    </form>
+    <a href="{% url 'profile' %}" class="btn btn-back">Назад к профилю</a>
+</div>
+{% endblock %}

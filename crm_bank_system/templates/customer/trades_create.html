@@ -1,0 +1,24 @@
+{% extends 'base_user.html' %}
+
+{% load static %}
+
+{% block title %}Создание трейда{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Создать новый трейд</h2>
+<form method="post" action="{% url 'trade_creation' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Создать</button>
+</form>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/trades_creation.js' %}"></script>
+{% endblock %}

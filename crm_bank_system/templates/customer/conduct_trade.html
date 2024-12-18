@@ -1,0 +1,25 @@
+{% extends "base_user.html" %}
+
+{% load static %}
+
+{% block title %}Проведение трейда{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1>Проведение трейда</h1>
+
+<p>Автор трейда: {{ trade.author.username }}</p>
+<p>Сумма: {{ trade.amount_from }} {{ trade.currency_from }}</p>
+<p>Сумма к обмену: {{ trade.amount_to }} {{ trade.currency_to }}</p>
+
+<form method="post" action="{% url 'conduct_trade' trade.id %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Провести трейд</button>
+</form>
+
+{% endblock %}

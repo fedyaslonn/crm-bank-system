@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Заявки на кредит</title>
+    <!-- Подключение Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center mb-4">Заявки на кредит</h1>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Пользователь</th>
+                    <th scope="col">Зарплата</th>
+                    <th scope="col">Статус</th>
+                    <th scope="col">Дата создания</th>
+                    <th scope="col">Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for loan_request in loan_requests %}
+                <tr>
+                    <td>{{ loan_request.user.username|default:"N/A" }}</td>
+                    <td>{{ loan_request.user.salary|default:"N/A" }}</td>
+                    <td>{{ loan_request.status }}</td>
+                    <td>{{ loan_request.created_at|date:"d M Y" }}</td>
+                    <td>
+                        <form action="{% url 'loan_request_approve' loan_request.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form action="{% url 'loan_request_reject' loan_request.id %}" method="post" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">Нет заявок на кредит.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Подключение Bootstrap JS и jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

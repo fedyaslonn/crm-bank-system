@@ -1,0 +1,31 @@
+<!-- currency/templates/currency/rates.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Курсы валют</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="mt-5">Курсы валют в бел. рублях</h1>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>Валюта</th>
+                    <th>Курс</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for currency, rate in rates.items %}
+                <tr>
+                    <td>{{ currency }}</td>
+                    <td>{{ rate }} BYN</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

@@ -1,0 +1,62 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Редактировать новость{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        .news-menu {
+            margin-bottom: 20px;
+        }
+        .news-menu .nav-tabs {
+            border-bottom: 2px solid #ddd;
+        }
+        .news-menu .nav-item .nav-link {
+            color: #555;
+        }
+        .news-menu .nav-item .nav-link.active {
+            color: #000;
+            font-weight: bold;
+            border-color: #ddd #ddd #fff;
+        }
+
+        .pagination {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .pagination a, .pagination span {
+            padding: 8px 16px;
+            text-decoration: none;
+            transition: background-color .3s;
+            border: 1px solid #ddd;
+            color: black;
+        }
+
+        .pagination a:hover:not(.active) {
+            background-color: #ddd;
+        }
+
+        .pagination .current {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: 1px solid #007bff;
+        }
+
+        .news-actions .btn {
+            margin-left: 10px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<h1>Редактировать новость</h1>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>
+{% endblock %}

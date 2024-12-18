@@ -1,0 +1,133 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %} Мои жалобы {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <style>
+        body {
+            background-color: #000; /* Черный фон */
+            color: #fff; /* Белый текст */
+        }
+        .dark-container {
+            background-color: #333;
+            color: #fff;
+        }
+        .card {
+            margin-top: 20px;
+            background-color: #444; /* Темно-серый фон для карточки */
+            color: #fff; /* Белый текст для карточки */
+            border: 1px solid #555; /* Легкий бордер */
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+        .card-header {
+            background-color: #111; /* Темно-серый фон для заголовка карточки */
+            color: #fff; /* Белый текст для заголовка карточки */
+        }
+        .btn-primary {
+            background-color: #ffc107; /* Желтый фон для кнопки */
+            border-color: #ffc107; /* Желтый бордер для кнопки */
+            color: #000; /* Черный текст для кнопки */
+        }
+        .btn-primary:hover {
+            background-color: #e0a800; /* Темно-желтый фон для кнопки при наведении */
+            border-color: #e0a800; /* Темно-желтый бордер для кнопки при наведении */
+            color: #000; /* Черный текст для кнопки при наведении */
+        }
+        .btn-add-report {
+            margin: 20px 0;
+            background-color: #28a745; /* Зеленый фон для кнопки */
+            color: #fff;
+        }
+        .btn-add-report:hover {
+            background-color: #218838;
+        }
+        .full-width-btn {
+            width: 100%; /* Ширина кнопки на всю строку */
+            margin: 20px 0;
+        }
+        .full-width-card {
+            width: 100%; /* Ширина карточки на всю ширину */
+        }
+    </style>
+
+    <div class="container dark-container">
+        <h1 class="text-center mt-4">Мои жалобы</h1>
+        <div class="text-center">
+            <a href="{% url 'documents:create_report' %}" class="btn btn-add-report btn-lg full-width-btn">Добавить жалобу</a>
+        </div>
+
+        <!-- Форма для выбора сортировки и фильтрации -->
+        <form method="get" action="" class="mt-4">
+            <div class="form-row align-items-center">
+                <!-- Сортировка по дате -->
+                <div class="col-auto">
+                    <label for="sort" class="mr-2">Сортировать по дате:</label>
+                    <select name="sort" id="sort" class="form-control">
+                        <option value="asc" {% if sort == "asc" %}selected{% endif %}>Сначала старые</option>
+                        <option value="desc" {% if sort == "desc" %}selected{% endif %}>Сначала новые</option>
+                    </select>
+                </div>
+
+                <!-- Фильтрация по статусу -->
+                <div class="col-auto">
+                    <label for="status" class="mr-2">Фильтр по статусу:</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="">Все</option>
+                        <option value="PENDING" {% if status == "PENDING" %}selected{% endif %}>Pending</option>
+                        <option value="RESOLVED" {% if status == "RESOLVED" %}selected{% endif %}>Resolved</option>
+                        <option value="REJECTED" {% if status == "REJECTED" %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+
+                <!-- Кнопка применения -->
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Применить</button>
+                </div>
+            </div>
+        </form>
+
+        {% if reports.exists %}
+            <div class="row mt-4">
+                {% for report in reports %}
+                    <div class="col-12">
+                        <div class="card full-width-card">
+                            <div class="card-header text-center">
+                                Жалоба от {{ report.created_at|date:"d.m.Y H:i" }}
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Описание:</strong> {{ report.description }}</p>
+                                <p><strong>Статус:</strong> {{ report.get_status_display }}</p>
+                                {% if report.screenshot %}
+                                    <p><strong>Скриншот:</strong> <a href="{{ report.screenshot }}" target="_blank">Просмотреть</a></p>
+                                {% endif %}
+
+                                <!-- Отображение ответа администратора -->
+                                {% if report.admin_response %}
+                                    <hr>
+                                    <p><strong>Ответ администратора:</strong></p>
+                                    <p>{{ report.admin_response }}</p>
+                                {% endif %}
+
+                                <!-- Кнопка "Изменить описание" доступна только для жалоб со статусом "Pending" -->
+                                {% if report.status == "PENDING" %}
+                                    <a href="{% url 'documents:edit_report' report.id %}" class="btn btn-primary btn-block">Изменить описание</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-danger text-center mt-4">У вас нет жалоб.</div>
+        {% endif %}
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+{% endblock %}

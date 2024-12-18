@@ -1,0 +1,103 @@
+{% extends "base_user.html" %}
+{% load static %}
+
+{% block title %}История транзакций{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/transactions.css' %}">
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <style>
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .transaction-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .transaction-item {
+            background-color: #1c1c1c;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .transaction-item p {
+            margin: 0;
+        }
+
+        .transaction-item .status {
+            font-weight: bold;
+        }
+
+        .transaction-item .status.completed {
+            color: #28a745;
+        }
+
+        .transaction-item .status.pending {
+            color: #ffc107;
+        }
+
+        .transaction-item .status.failed {
+            color: #dc3545;
+        }
+
+        .transaction-item .amount {
+            font-weight: bold;
+        }
+
+        .transaction-item .amount.positive {
+            color: #28a745;
+        }
+
+        .transaction-item .amount.negative {
+            color: #dc3545;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1>История транзакций</h1>
+        <ul class="transaction-list">
+            {% for transaction in transaction_list %}
+                <li class="transaction-item">
+                    <div>
+                        <p><strong>Тип:</strong> {{ transaction.get_type_display }}</p>
+                        <p><strong>Статус:</strong> <span class="status {% if transaction.status == 'COMPLETED' %}completed{% elif transaction.status == 'PENDING' %}pending{% else %}failed{% endif %}">{{ transaction.get_status_display }}</span></p>
+                        <p><strong>Сумма:</strong> <span class="amount {% if transaction.type == 'REPLENISHMENT' %}positive{% else %}negative{% endif %}">{{ transaction.amount }} {{ transaction.currency_from }}</span></p>
+                        <p><strong>Валюта 1:</strong> {{ transaction.currency_from }}</p>
+                        <p><strong>Валюта 2:</strong> {{ transaction.currency_to }}</p>
+                        <p><strong>Дата:</strong> {{ transaction.created_at|date:"d M Y H:i" }}</p>
+                    </div>
+                    <div>
+                        <p><strong>Отправитель:</strong> {{ transaction.sender.username }}</p>
+                        <p><strong>Получатель:</strong> {{ transaction.recipient.username|default:"-" }}</p>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="transaction-item">
+                    <p>У вас пока нет транзакций.</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,233 @@
+{% extends "base_user.html" %}
+{% load static %}
+{% block title %}Новости{% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/news.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+<style>
+    /* Контейнер для выравнивания по центру */
+    .container {
+        max-width: 800px; /* Ограничиваем ширину контейнера */
+        margin: 0 auto; /* Центрируем контейнер */
+        padding: 20px; /* Добавляем отступы */
+        text-align: center; /* Выравниваем текст по центру */
+    }
+
+    /* Навигация */
+    .news-menu {
+        margin-bottom: 20px;
+    }
+
+    .news-menu .nav-tabs {
+        display: flex;
+        justify-content: center; /* Выравниваем элементы навигации по центру */
+        border-bottom: 2px solid #ddd;
+    }
+
+    .news-menu .nav-item {
+        margin: 0 10px; /* Добавляем отступы между элементами навигации */
+    }
+
+    .news-menu .nav-item .nav-link {
+        color: #555;
+        padding: 10px 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+    .news-menu .nav-item .nav-link.active {
+        color: #000;
+        font-weight: bold;
+        border-color: #ddd #ddd #fff;
+        background-color: #f8f9fa;
+    }
+
+    .news-menu .nav-item .nav-link:hover {
+        background-color: #ddd;
+    }
+
+    /* Пагинация */
+    .pagination {
+        margin-top: 20px;
+        text-align: center; /* Выравниваем пагинацию по центру */
+    }
+
+    .pagination a, .pagination span {
+        padding: 8px 16px;
+        text-decoration: none;
+        transition: background-color .3s;
+        border: 1px solid #ddd;
+        color: black;
+    }
+
+    .pagination a:hover:not(.active) {
+        background-color: #ddd;
+    }
+
+    .pagination .current {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: 1px solid #007bff;
+    }
+
+    /* Кнопки действий */
+    .news-actions .btn {
+        margin-left: 10px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="news-section">
+    <h1>Новости</h1>
+
+    <!-- Меню для переключения -->
+    <nav class="news-menu mb-4">
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'all' %}active{% endif %}" href="{% url 'news_list' %}">Все Новости</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'friends' %}active{% endif %}" href="{% url 'friends_news' %}">Новости Друзей</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link {% if active_tab == 'my_news' %}active{% endif %}" href="{% url 'my_news_list' %}">Мои Новости</a>
+            </li>
+        </ul>
+    </nav>
+
+    <a href="{% url 'add_news' %}" class="add-news-btn btn btn-primary mb-3">Добавить Новость</a>
+
+    <form method="get" action="" class="mb-4">
+        <div class="form-row">
+            <div class="col-md-6">
+                <input type="text" name="search" class="form-control" placeholder="Поиск новостей по заголовку или контенту" value="{{ request.GET.search }}">
+            </div>
+            <div class="col-md-4">
+                <select name="sort" class="form-control">
+                    <option value="">Отсортировать по</option>
+                    <option value="asc" {% if request.GET.sort == 'asc' %}selected{% endif %}>A to Z</option>
+                    <option value="desc" {% if request.GET.sort == 'desc' %}selected{% endif %}>Z to A</option>
+                    <option value="likes_desc" {% if request.GET.sort == 'likes_desc' %}selected{% endif %}>По лайкам (убывание)</option>
+                    <option value="likes_asc" {% if request.GET.sort == 'likes_asc' %}selected{% endif %}>По лайкам (возрастание)</option>
+                                        <option value="dislikes_desc" {% if request.GET.sort == 'dislikes_desc' %}selected{% endif %}>По дизлайкам (убывание)</option>
+                    <option value="dislikes_asc" {% if request.GET.sort == 'dislikes_asc' %}selected{% endif %}>По дизлайкам (возрастание)</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-secondary btn-block">Применить фильтр</button>
+            </div>
+        </div>
+    </form>
+
+    {% if news_list %}
+        <div class="news-list">
+            {% for news in news_list %}
+                <div class="news-item border p-3 mb-3 rounded" id="news-{{ news.id }}">
+                    <h2>{{ news.title }}</h2>
+                    <p><strong>Автор:</strong> {{ news.authors.username }}</p>
+                    <p><strong>Дата публикации:</strong> {{ news.created_at|date:"d M Y H:i" }}</p>
+                    <p>{{ news.content|truncatechars:40 }}</p>
+
+                    <div class="news-actions d-flex justify-content-between align-items-center">
+                        <!-- Кнопки "Лайк" и "Дизлайк" слева -->
+                        <div class="reaction-container d-flex align-items-center">
+                            <!-- Кнопка лайка -->
+                            <button
+                                class="reaction-btn like-btn btn btn-light {% if news.is_liked %}active{% endif %}"
+                                data-news-id="{{ news.id }}"
+                                data-action="like">
+                                👍
+                            </button>
+                            <span id="likes-count-{{ news.id }}" class="ml-2">{{ news.likes_count }}</span>
+
+                            <button
+                                class="reaction-btn dislike-btn btn btn-light {% if news.is_disliked %}active{% endif %} ml-2"
+                                data-news-id="{{ news.id }}"
+                                data-action="dislike">
+                                👎
+                            </button>
+                            <span id="dislikes-count-{{ news.id }}" class="ml-2">{{ news.dislikes_count }}</span>
+                        </div>
+
+                        <!-- Кнопки "Читать полностью", "Изменить" и "Удалить" справа -->
+                        <div class="action-buttons d-flex">
+                            <a href="{% url 'news_detail' news_id=news.id %}" class="btn btn-primary">Читать полностью</a>
+                            {% if request.user == news.authors or request.user.is_staff %}
+                                <a href="{% url 'edit_news' news.id %}" class="btn btn-warning ml-2">Изменить</a>
+                                <a href="{% url 'delete_news' news.id %}" class="btn btn-danger ml-2">Удалить</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>Новостей пока нет.</p>
+    {% endif %}
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    const csrftoken = '{{ csrf_token }}';
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const reactionButtons = document.querySelectorAll('.reaction-btn');
+
+        reactionButtons.forEach(button => {
+            button.addEventListener('click', function (event) {
+                event.preventDefault();
+                const newsId = button.getAttribute('data-news-id');
+                const action = button.getAttribute('data-action');
+
+                // Отключаем кнопку во время запроса
+                button.disabled = true;
+
+                fetch(`/news/${newsId}/${action}/`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': csrftoken,
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Обновляем счетчики
+                    document.getElementById(`likes-count-${newsId}`).textContent = data.likes_count;
+                    document.getElementById(`dislikes-count-${newsId}`).textContent = data.dislikes_count;
+
+                    // Обновляем состояние кнопок
+                    const likeButton = document.querySelector(`#news-${newsId} .like-btn`);
+                    const dislikeButton = document.querySelector(`#news-${newsId} .dislike-btn`);
+
+                    if (data.is_liked) {
+                        likeButton.classList.add('active');
+                        dislikeButton.classList.remove('active');
+                    } else {
+                        likeButton.classList.remove('active');
+                    }
+
+                    if (data.is_disliked) {
+                        dislikeButton.classList.add('active');
+                        likeButton.classList.remove('active');
+                    } else {
+                        dislikeButton.classList.remove('active');
+                    }
+
+                    // Включаем кнопку обратно
+                    button.disabled = false;
+                })
+                .catch(error => {
+                    console.error('Ошибка при отправке реакции:', error);
+                    button.disabled = false;
+                });
+            });
+        });
+    });
+</script>
+{% endblock %}

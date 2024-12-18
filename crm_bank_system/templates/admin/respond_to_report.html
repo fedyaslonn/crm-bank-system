@@ -1,0 +1,20 @@
+{% extends "base_admin.html" %}
+{% load static %}
+{% block title %} Ответить на жалобу {% endblock %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/buy_crypto.css' %}">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container dark-container">
+        <h1 class="text-center mt-4">Ответить на жалобу</h1>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary btn-block">Сохранить ответ</button>
+        </form>
+        <a href="{% url 'admin_pending_reports' %}" class="btn btn-secondary btn-block mt-2">Назад к жалобам</a>
+    </div>
+{% endblock %}

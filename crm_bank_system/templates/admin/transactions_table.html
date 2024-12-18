@@ -1,0 +1,26 @@
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Отправитель</th>
+            <th>Получатель</th>
+            <th>Сумма</th>
+            <th>Тип</th>
+            <th>Статус</th>
+            <th>Дата</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.id }}</td>
+            <td>{{ transaction.sender.username }}</td>
+            <td>{{ transaction.recipient.username|default:"-" }}</td>
+            <td>{{ transaction.amount }}</td>
+            <td>{{ transaction.get_type_display }}</td>
+            <td>{{ transaction.get_status_display }}</td>
+            <td>{{ transaction.created_at }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>

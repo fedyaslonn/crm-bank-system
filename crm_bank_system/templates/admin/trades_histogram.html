@@ -1,0 +1,12 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Популярность трейдов{% endblock %}
+
+{% block header %}Админ панель{% endblock %}
+
+{% block content %}
+    <h1>Популярность трейдов</h1>
+    <div>
+        {{ plot_div|safe }}
+    </div>
+{% endblock %}
